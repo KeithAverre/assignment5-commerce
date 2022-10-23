@@ -17,22 +17,20 @@ Known bugs:
 
 """
 
-def index(request):
-    return render(request, "auctions/index.html")
 
 """
 This is a method to view all listings.
 
 TODO:
     -Add url. **Finished, needs testings xx
-    
+
     -if not logged in, cannot add to watchlist
 
 Known bugs:
 
 """
-def active_listings(request):
-    pass
+def index(request):
+    return render(request, "auctions/index.html")
 
 
 """
