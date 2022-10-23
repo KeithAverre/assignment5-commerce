@@ -40,7 +40,7 @@ This is a method to create a listing.
 
 TODO:
     -Add url. **Finished, needs testings xx
-    
+    -Ability to edit listing?
     -Only shown when logged in.
 
 Known bugs:
