@@ -1,16 +1,124 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User
 
+"""
+TEMPLATE
+
+TODO:
+
+
+Known bugs:
+
+"""
 
 def index(request):
     return render(request, "auctions/index.html")
 
+"""
+This is a method to view all listings.
 
+TODO:
+    -Add url. **Finished, needs testings xx
+    
+    -if not logged in, cannot add to watchlist
+
+Known bugs:
+
+"""
+def active_listings(request):
+    pass
+
+
+"""
+This is a method to create a listing.
+
+TODO:
+    -Add url. **Finished, needs testings xx
+    
+    -Only shown when logged in.
+
+Known bugs:
+
+"""
+@login_required
+def create_listing(request):
+    pass
+
+
+"""
+This is a view to allow viewing of a particular listing
+
+TODO:
+    -add url + necessary string input. **Finished, needs testings xx
+    
+    IF LOGGED IN:
+        -Allow for user to add to watchlist
+        -Allow for user to bid listing
+
+    IF NOT LOGGED IN:
+        -put login button rather than bid button
+
+Known bugs:
+
+"""
+def listing(request, listing):
+    pass
+
+"""
+This is the categories view.
+Allowing for a selection of categories to filter listings.
+
+TODO:
+    -Add url. **Finished, needs testings xx
+    
+    -how to pass in selected categories from html
+
+Known bugs:
+    
+"""
+def categories(request):
+    pass
+
+
+
+
+
+"""
+This is the watchlist of the current user
+
+TODO:
+    -Add url. **Finished, needs testings xx
+    
+    -Only shown when logged in.
+
+Known bugs:
+    
+"""
+@login_required
+def watchlist(request):
+    pass
+
+
+
+
+
+
+
+"""
+This is the login section of the views.
+
+TODO:
+    -HOW TO ADD USER IN ADMIN PAGE??? SEE MODELS.PY USER.
+
+Known bugs:
+    -Registration can happen without email or password. **fixed by adding a required field to register.html
+"""
 def login_view(request):
     if request.method == "POST":
 
