@@ -47,10 +47,8 @@ def active_listings(request):
         })
 
 def active_listings(request,category):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    else:
-        return render(request, "auctions/index.html", {
+
+    return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(categories=category)
 
         })

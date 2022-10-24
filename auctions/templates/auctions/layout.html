@@ -22,7 +22,7 @@
                         <a href="{% url 'user_listings' %}">My listings</a>
                     {% else %}
                         <a href="{% url 'index' %}">Active Listings</a>
-                        <a href="#">Categories</a>
+                        <a href="{% url 'categories' %}">Categories</a>
                     {% endif %}
                 </span>
                 <span>

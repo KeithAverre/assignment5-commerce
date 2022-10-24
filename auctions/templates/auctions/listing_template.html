@@ -10,10 +10,11 @@
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Go to listing</button >
     </form>
+    {% if user.is_authenticated %}
     <form action="#" style="display: inline">
         <button type="submit" style="display: inline">Add to Watchlist</button>
     </form>
-
+    {% endif %}
     <footer>sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</footer>
 
 
