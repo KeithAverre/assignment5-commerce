@@ -5,6 +5,7 @@ from PIL import Image #for image field
 from django.core.files import File
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
+from datetime import date
 
 """
 MODEL: USER
@@ -58,26 +59,26 @@ class Listing(models.Model):
     )
 
     # width and height might be a problem and file size
-    image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100)
+    # image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100)
     image_url = models.URLField()
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
-    creation_date = models.DateTimeField(auto_now=False, auto_now_add=True) #save on creation
+    creation_date = models.DateField(default=date.today) #save on creation
 
 
 
     def __str__(self):
         return f'{self.title}'
 
-    def save(self, *args, **kwargs):
-        super(Listing, self).save(*args, **kwargs)
-        if self.image_url and not self.image:
-            img_temp = NamedTemporaryFile(delete=True)
-            img_temp.write(urlopen(self.image_url).read())
-            img_temp.flush()
-            self.image.save(f"image_{self.pk}", File(img_temp))
-            super(Listing, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super(Listing, self).save(*args, **kwargs)
+    #     if self.image_url and not self.image:
+    #         img_temp = NamedTemporaryFile(delete=True)
+    #         img_temp.write(urlopen(self.image_url).read())
+    #         img_temp.flush()
+    #         self.image.save(f"image_{self.pk}", File(img_temp))
+    #         super(Listing, self).save(*args, **kwargs)
 
 
 

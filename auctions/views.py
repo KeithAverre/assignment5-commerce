@@ -42,8 +42,6 @@ def active_listings(request):
     else:
         if "wishlist" not in request.session:
             request.session["wishlist"] = []
-        if "my_listings" not in request.session:
-            request.session["my_listings"] = []
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.all()
         })
@@ -70,11 +68,14 @@ def create_listing(request):
         return redirect('login')
     else:
         if request.method == "POST":
-            listing_form = ListingForm(request.POST, request.FILES)
+            listing_form = ListingForm(request.POST, )
             if listing_form.is_valid():
-                listing_form.save()
+                #thank you kevin, you are a life saver
+                new_listing = listing_form.save(commit=False)
+                new_listing.user_owner = request.user
+                new_listing.save()
                 messages.success(request, (f'\"{listing_form.cleaned_data["title"]}\" was successfully added!'))
-                return redirect("index")
+                return redirect("listing", listing_id=new_listing.pk) #should go to new listing
             else:
                 messages.error(request, 'Error saving form')
         else:
