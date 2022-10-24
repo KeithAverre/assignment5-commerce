@@ -36,15 +36,20 @@ TODO:
         -Time of post datetime field**
 """
 class Listing(models.Model):
+    title = models.CharField(max_length=100)
+    description = models.TextField()
+    bid = models.IntegerField()  # integer for money value?
+
     HOME = 'HM'
     CLOTHES = 'CL'
     FURNITURE = 'FR'
     NONE = 'NA'
     CATEGORY = [
+        (NONE, 'None'),
         (HOME, 'Home'),
         (CLOTHES, 'Clothes'),
         (FURNITURE, 'Furniture'),
-        (NONE, 'None'),
+
     ]
     categories = models.CharField(
         max_length=2,
@@ -53,13 +58,13 @@ class Listing(models.Model):
     )
 
     # width and height might be a problem and file size
-    image = models.ImageField(upload_to='images/Listings/', blank=True,max_length=100)
+    image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100)
     image_url = models.URLField()
-    title = models.CharField(max_length=100)
-    description = models.TextField()
+
+
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
-    bid = models.IntegerField() #integer for money value?
     creation_date = models.DateTimeField(auto_now=False, auto_now_add=True) #save on creation
+
 
 
     def __str__(self):
