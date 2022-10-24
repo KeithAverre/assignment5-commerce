@@ -2,6 +2,9 @@ from django.contrib.auth.models import AbstractUser
 #from django.contrib.auth.models import User
 from django.db import models
 from PIL import Image #for image field
+from django.core.files import File
+from urllib.request import urlopen
+from tempfile import NamedTemporaryFile
 
 """
 MODEL: USER
@@ -61,6 +64,15 @@ class Listing(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+    def save(self, *args, **kwargs):
+        super(Listing, self).save(*args, **kwargs)
+        if self.image_url and not self.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(self.image_url).read())
+            img_temp.flush()
+            self.image.save(f"image_{self.pk}", File(img_temp))
+            super(Listing, self).save(*args, **kwargs)
 
 
 
