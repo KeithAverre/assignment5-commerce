@@ -46,11 +46,15 @@ def active_listings(request):
             "listings": Listing.objects.all()
         })
 
-def active_listings(request,catagories):
+def active_listings(request,catagory):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        pass
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(categories=catagory)
+
+        })
+
 """
 This is a method to create a listing.
 
@@ -111,11 +115,10 @@ def listing(request, listing_id):
     })
 
 def user_listings(request):
-
     return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(user_owner=request.user)
         })
-    pass
+
 """
 This is the categories view.
 Allowing for a selection of categories to filter listings.
@@ -129,7 +132,12 @@ Known bugs:
     
 """
 def categories(request):
-    pass
+    if request.method == "POST":
+        return redirect(f'active_listings/{request.POST["Category"]}') #not the prettiest solution but it works
+    else:
+        return render(request, "auctions/categories.html")
+
+
 
 
 
