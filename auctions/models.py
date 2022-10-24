@@ -53,7 +53,7 @@ class Listing(models.Model):
     )
 
     # width and height might be a problem and file size
-    image = models.ImageField(upload_to='images/', blank=True,max_length=100)
+    image = models.ImageField(upload_to='images/Listings/', blank=True,max_length=100)
     image_url = models.URLField()
     title = models.CharField(max_length=100)
     description = models.TextField()
