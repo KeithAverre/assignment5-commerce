@@ -8,6 +8,7 @@ from django.urls import reverse
 from .models import User,Listing, bid, Comment
 from .forms import ListingForm
 from django.contrib import messages
+from django.http import Http404
 """
 TEMPLATE
 
@@ -19,9 +20,10 @@ Known bugs:
 """
 
 
-
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html",{
+        "listings": Listing.objects.all()
+    })
 """
 This is a method to view all listings.
 
@@ -33,11 +35,24 @@ TODO:
 Known bugs:
 
 """
+#this will never be accessed before being logged in
 def active_listings(request):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        if "wishlist" not in request.session:
+            request.session["wishlist"] = []
+        if "my_listings" not in request.session:
+            request.session["my_listings"] = []
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.all()
+        })
 
 def active_listings(request,catagories):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        pass
 """
 This is a method to create a listing.
 
@@ -64,8 +79,7 @@ def create_listing(request):
                 messages.error(request, 'Error saving form')
         else:
             listing_form = ListingForm()
-        listings = Listing.objects.all()
-        return render(request, "auctions/create_listing.html", {'listings_form': listing_form, 'listings': listings})
+        return render(request, "auctions/create_listing.html", {'listings_form': listing_form})
 
 
 
@@ -85,8 +99,15 @@ TODO:
 Known bugs:
 
 """
-def listing(request, listing):
-    pass
+def listing(request, listing_id):
+    try:
+        entry = Listing.objects.get(pk=listing_id)
+    except Listing.DoesNotExist:
+        raise Http404("Listing not found")
+    return render(request, "auctions/listing.html", {
+        "listing": entry,
+
+    })
 
 """
 This is the categories view.
@@ -118,7 +139,6 @@ TODO:
 Known bugs:
     
 """
-@login_required
 def watchlist(request):
     if not request.user.is_authenticated:
         return redirect('login')

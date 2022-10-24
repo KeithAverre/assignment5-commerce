@@ -4,7 +4,7 @@
 <h2>Create a Listing</h2>
 
 <article>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" action="{% url 'create_listing' %}">
         {% csrf_token %}
         {{listings_form}}
         <div>

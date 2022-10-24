@@ -1,10 +1,17 @@
 {% extends "auctions/layout.html" %}
 
 {% block main %}
-<h2>{{ listing_title }}</h2>
 
 <article>
-    hahaha
+    <h2>{{ listing.title }}</h2>
+    <span>Category: {{ listing.categories }}</span>
+    <h5>Current Bid: {{ listing.bid }}</h5>
+    <br>
+    <p>{{ listing.description }}</p>
+    <br>
+    <a href = {{ listing.image_url }}><img src="{{ listing.image_url }}"></a>
+
+    <footer>sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</footer>
 
 
 </article>
