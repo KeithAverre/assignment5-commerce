@@ -5,8 +5,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User
-
+from .models import User,Listing, bid, Comment
+from .forms import ListingForm
+from django.contrib import messages
 """
 TEMPLATE
 
@@ -48,9 +49,24 @@ TODO:
 Known bugs:
 
 """
-@login_required
+
 def create_listing(request):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        if request.method == "POST":
+            listing_form = ListingForm(request.POST, request.FILES)
+            if listing_form.is_valid():
+                listing_form.save()
+                messages.success(request, (f'\"{listing_form.cleaned_data["title"]}\" was successfully added!'))
+                return redirect("index")
+            else:
+                messages.error(request, 'Error saving form')
+        else:
+            listing_form = ListingForm()
+        listings = Listing.objects.all()
+        return render(request, "auctions/create_listing.html", {'listings_form': listing_form, 'listings': listings})
+
 
 
 """
@@ -104,7 +120,10 @@ Known bugs:
 """
 @login_required
 def watchlist(request):
-    pass
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        pass
 
 
 
