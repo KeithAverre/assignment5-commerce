@@ -57,7 +57,7 @@ class Listing(models.Model):
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
     bid = models.IntegerField() #integer for money value?
     creation_date = models.DateTimeField(auto_now=False, auto_now_add=True) #save on creation
-    #needs comment field
+
 
     def __str__(self):
         return f'{self.title}'

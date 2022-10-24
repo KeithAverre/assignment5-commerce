@@ -18,6 +18,9 @@ Known bugs:
 """
 
 
+
+def index(request):
+    return render(request, "auctions/index.html")
 """
 This is a method to view all listings.
 
@@ -25,14 +28,15 @@ TODO:
     -Add url. **Finished, needs testings xx
 
     -if not logged in, cannot add to watchlist
-
+    -if filtered then 
 Known bugs:
 
 """
-def index(request):
-    return render(request, "auctions/index.html")
+def active_listings(request):
+    pass
 
-
+def active_listings(request,catagories):
+    pass
 """
 This is a method to create a listing.
 
