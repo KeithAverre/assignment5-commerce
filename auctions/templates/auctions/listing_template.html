@@ -1,5 +1,9 @@
 <section>
-    <h2>{{ listing.title }}</h2>
+    <h2 style="display: inline">{{ listing.title }}</h2>
+    {% if listing.closed %}
+
+        <h3 style="color: red" style="display: inline">CLOSED</h3>
+    {% endif %}
     <span>Category: {{ listing.categories }}</span>
     <h5>Current Bid: {{ listing.bid }}</h5>
     <br>
