@@ -6,7 +6,13 @@
     <p>{{ listing.description }}</p>
     <br>
     <a href = {{ listing.image_url }}><img src="{{ listing.image_url }}" width= 500px height= 500px></a>
-    <form action="{% url 'listing' listing.pk %}"> <button type="submit">Go to listing</button></form>
+    <br>
+    <form action="{% url 'listing' listing.pk %}" style="display: inline">
+        <button type="submit" style="display: inline">Go to listing</button >
+    </form>
+    <form action="#" style="display: inline">
+        <button type="submit" style="display: inline">Add to Watchlist</button>
+    </form>
 
     <footer>sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</footer>
 
