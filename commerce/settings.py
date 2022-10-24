@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+from pathlib import Path
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -123,3 +124,7 @@ STATIC_URL = '/static/'
 
 # Auto-created primary key used when not defining a primary key type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# media file location
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

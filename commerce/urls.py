@@ -20,3 +20,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("auctions.urls"))
 ]
+
+from django.conf import settings #add this
+from django.conf.urls.static import static #add this
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
