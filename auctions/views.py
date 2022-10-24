@@ -110,6 +110,12 @@ def listing(request, listing_id):
 
     })
 
+def user_listings(request):
+
+    return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(user_owner=request.user)
+        })
+    pass
 """
 This is the categories view.
 Allowing for a selection of categories to filter listings.

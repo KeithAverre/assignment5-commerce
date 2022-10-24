@@ -4,12 +4,9 @@
 <h2>Active Listings</h2>
 
 <article>
-    <section>Listing 1</section>
-
-    <section>Listing 2</section>
-
-    <section>Listing 3</section>
-
+    {% for listing in listings %}
+        {% include "auctions/listing_template.html" %}
+    {% endfor %}
 
 </article>
 {% endblock %}
