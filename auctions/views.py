@@ -186,9 +186,34 @@ def open(request, listing_id):
         if request.user != entry.user_owner:
             return redirect('index') #no idea how'd you get here but just in case
         else:
-            entry.open_listing()
+            if entry.finalized == True:
+                return redirect('listing', listing_id=listing_id)
+            else:
+                entry.open_listing()
+                entry.save()
+                return redirect('listing', listing_id=listing_id)
+
+
+def finalize_listing(request, listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        entry = Listing.objects.get(pk=listing_id)
+        if request.user != entry.user_owner:
+            return redirect('index') #no idea how'd you get here but just in case
+        else:
+            try:
+                entry.finalize_listing(bid.objects.get(amount=Listing.objects.get(pk=listing_id).bid,listing=listing_id).bidder)
+            except:
+                entry.close_listing()
             entry.save()
             return redirect('listing', listing_id=listing_id)
+
+
+def my_wins(request):
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.filter(final_bidder=request.user)
+    })
 """
 This is the watchlist of the current user
 

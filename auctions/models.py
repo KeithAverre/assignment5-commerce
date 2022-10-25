@@ -39,7 +39,7 @@ TODO:
 class Listing(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    bid = models.IntegerField()  # integer for money value?
+    bid = models.IntegerField()
 
     HOME = 'HM'
     CLOTHES = 'CL'
@@ -58,7 +58,7 @@ class Listing(models.Model):
         default=NONE
     )
 
-    # width and height might be a problem and file size
+
     # image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100)
     image_url = models.URLField()
 
@@ -66,6 +66,8 @@ class Listing(models.Model):
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
     creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
     closed = models.BooleanField(default=False)
+    finalized = models.BooleanField(default=False)
+    final_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder_won", null=True)
 
 
 
@@ -79,6 +81,11 @@ class Listing(models.Model):
         self.closed = True
     def open_listing(self):
         self.closed = False
+
+    def finalize_listing(self, winner):
+        self.finalized = True
+        self.closed = True
+        self.final_bidder = winner
     # def save(self, *args, **kwargs):
     #     super(Listing, self).save(*args, **kwargs)
     #     if self.image_url and not self.image:

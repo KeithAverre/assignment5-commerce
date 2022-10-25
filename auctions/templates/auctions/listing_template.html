@@ -14,7 +14,7 @@
         <button type="submit" style="display: inline">Go to listing</button >
     </form>
     <br>
-    {% if user.is_authenticated and user.username != listing.user_owner.username%}
+    {% if user.is_authenticated and user.username != listing.user_owner.username and listing.closed and not listing.finalized%}
     <form action="{% url 'newbid' listing_id=listing.pk %}" style="display: inline" method="POST">
         {% csrf_token %}
         <button type="submit" style="display: inline">Bid now!</button>
@@ -25,10 +25,14 @@
     {% if user.is_authenticated and user.username == listing.user_owner.username and not listing.closed%}
     <form action="{% url 'close' listing_id=listing.pk %}" style="display: inline" method="POST">
         {% csrf_token %}
-        <button type="submit" style="display: inline">Close Listing</button>
+        <button type="submit" style="display: inline">Cancel Listing</button>
+    </form>
+    <form action="{% url 'finalize_listing' listing_id=listing.pk %}" style="display: inline" method="POST">
+        {% csrf_token %}
+        <button type="submit" style="display: inline">Accept Current Bid</button>
     </form>
     {% endif %}
-    {% if user.is_authenticated and user.username == listing.user_owner.username and listing.closed%}
+    {% if user.is_authenticated and user.username == listing.user_owner.username and listing.closed and not listing.finalized%}
     <form action="{% url 'open' listing_id=listing.pk %}" style="display: inline" method="POST">
         {% csrf_token %}
         <button type="submit" style="display: inline">Open Listing</button>
@@ -40,6 +44,7 @@
         <button type="submit" style="display: inline">Add to Watchlist</button>
     </form>
     {% endif %}
+    <!--Does not current work due to structure of file-->
     {% if user.is_authenticated and watchlist %}
     <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Remove from watchlist</button>
