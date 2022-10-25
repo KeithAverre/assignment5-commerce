@@ -14,7 +14,14 @@
     <br>
     <p>{{ listing.description }}</p>
     <br>
-    <a href = {{ listing.image_url }}><img src="{{ listing.image_url }}" width= 500px height= 500px alt="{{ listing.image_url }}"></a>
+    {% if listing.image %}
+        <a href="#"><img src="#" alt="{{ listing.title }}" width= 500px height= 500px> </a>
+    {% endif %}
+    {% if not listing.image and listing.image_url %}
+    <a href = {{ listing.image_url }}>
+        <img src="{{ listing.image_url }}" width= 500px height= 500px alt="Picture of: {{ listing.title }}">
+    </a>
+    {% endif %}
     <br>
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Go to listing</button >

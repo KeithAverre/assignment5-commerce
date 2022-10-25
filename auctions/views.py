@@ -126,7 +126,7 @@ def close(request, listing_id):
     else:
         entry = Listing.objects.get(pk=listing_id)
         if request.user != entry.user_owner:
-            return redirect('index') #no idea how'd you get here but just in case
+            return redirect('listing', listing_id=listing_id) #no idea how'd you get here but just in case
         else:
             entry.close_listing()
             entry.save()
@@ -137,7 +137,7 @@ def open(request, listing_id):
     else:
         entry = Listing.objects.get(pk=listing_id)
         if request.user != entry.user_owner:
-            return redirect('index') #no idea how'd you get here but just in case
+            return redirect('listing', listing_id=listing_id) #no idea how'd you get here but just in case
         else:
             if entry.finalized == True:
                 return redirect('listing', listing_id=listing_id)
@@ -153,7 +153,7 @@ def finalize_listing(request, listing_id):
     else:
         entry = Listing.objects.get(pk=listing_id)
         if request.user != entry.user_owner:
-            return redirect('index') #no idea how'd you get here but just in case
+            return redirect('listing', listing_id=listing_id) #no idea how'd you get here but just in case
         else:
             try:
                 entry.finalize_listing(bid.objects.get(amount=Listing.objects.get(pk=listing_id).bid,listing=listing_id).bidder)
@@ -186,7 +186,7 @@ def watchlist(request):
             listings.append(Listing.objects.get(pk=i))
         return render(request, "auctions/watchlist.html", {
             "listings": listings,
-            "amount" :len(request.session["watchlist"]),
+            "amount" : len(request.session["watchlist"]),
             "watching": request.session["watchlist"],
         })
 
