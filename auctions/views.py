@@ -34,29 +34,6 @@ def index(request):
         })
 
 
-"""
-This is a method to view all listings.
-
-TODO:
-    -Add url. **Finished, needs testings xx
-
-    -if not logged in, cannot add to watchlist
-    -if filtered then 
-Known bugs:
-
-"""
-
-
-# this will never be accessed before being logged in
-def active_listings(request):
-    if not request.user.is_authenticated:
-        return redirect('login')
-    else:
-        return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(closed=False)
-        })
-
-
 def active_listings(request, category):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(categories=category, closed=False)
@@ -66,14 +43,6 @@ def active_listings(request, category):
 
 """
 This is a method to create a listing.
-
-TODO:
-    -Add url. **Finished, needs testings xx
-    -Ability to edit listing?
-    -Only shown when logged in.
-
-Known bugs:
-
 """
 
 
@@ -100,22 +69,7 @@ def create_listing(request):
 
 """
 This is a view to allow viewing of a particular listing
-
-TODO:
-    -add url + necessary string input. **Finished, needs testings xx
-    
-    IF LOGGED IN:
-        -Allow for user to add to watchlist
-        -Allow for user to bid listing
-
-    IF NOT LOGGED IN:
-        -put login button rather than bid button
-
-Known bugs:
-
 """
-
-
 def listing(request, listing_id):
     try:
         entry = Listing.objects.get(pk=listing_id)
@@ -128,25 +82,13 @@ def listing(request, listing_id):
 
     })
 
-
+"""
+All listings by the particular user
+"""
 def user_listings(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(user_owner=request.user)
     })
-
-
-"""
-This is the categories view.
-Allowing for a selection of categories to filter listings.
-
-TODO:
-    -Add url. **Finished, needs testings xx
-    
-    -how to pass in selected categories from html
-
-Known bugs:
-    
-"""
 
 
 def categories(request):
@@ -167,6 +109,9 @@ def newbid(request, listing_id):
         bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry).save()
         return redirect('listing', listing_id=listing_id)
 
+"""
+Views for management of a listing
+"""
 def close(request, listing_id):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -209,24 +154,19 @@ def finalize_listing(request, listing_id):
             entry.save()
             return redirect('listing', listing_id=listing_id)
 
-
+"""
+Wins for the current user
+"""
 def my_wins(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(final_bidder=request.user)
     })
+
+
+
 """
-This is the watchlist of the current user
-
-TODO:
-    -Add url. **Finished, needs testings xx
-    
-    -Only shown when logged in.
-
-Known bugs:
-    
+This is the watchlist of the current user  
 """
-
-
 def watchlist(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -271,7 +211,9 @@ def watchlist_remove(request, listing_id):
 # REALLY UGLY SOLUTION BUT COULDN'T GET POP OR DEL WORK
 
 
-
+"""
+Comment views for listings
+"""
 def comment(request,listing_id):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -292,17 +234,12 @@ def del_comment(request, comment_id):
             return redirect('listing', listing_id=listing_id)
         else:
             return redirect('index')  # no idea how'd you get here but just in case
+
+
+
 """
-This is the login section of the views.
-
-TODO:
-    -HOW TO ADD USER IN ADMIN PAGE??? SEE MODELS.PY USER.
-
-Known bugs:
-    -Registration can happen without email or password. **fixed by adding a required field to register.html
+This is the login section for users
 """
-
-
 def login_view(request):
     if request.method == "POST":
 
