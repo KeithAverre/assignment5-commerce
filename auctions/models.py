@@ -65,6 +65,7 @@ class Listing(models.Model):
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
     creation_date = models.DateField(default=date.today) #save on creation
+    closed = models.BooleanField(default=False)
 
 
 

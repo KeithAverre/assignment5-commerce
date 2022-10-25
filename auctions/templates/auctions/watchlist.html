@@ -4,9 +4,8 @@
 <h2>My watchlist</h2>
 
 <article>
-    {% for entry in listings %}
-    <section></section>
+    {% for listing in listings %}
+        {% include "auctions/listing_template.html" %}
     {% endfor %}
-
 </article>
 {% endblock %}

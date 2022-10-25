@@ -9,7 +9,7 @@
     <br>
     <p>{{ listing.description }}</p>
     <br>
-    <a href = {{ listing.image_url }}><img src="{{ listing.image_url }}" width= 500px height= 500px></a>
+    <a href = {{ listing.image_url }}><img src="{{ listing.image_url }}" width= 500px height= 500px alt="{{ listing.image_url }}"></a>
     <br>
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Go to listing</button >

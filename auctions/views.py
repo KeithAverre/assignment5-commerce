@@ -21,9 +21,16 @@ Known bugs:
 
 
 def index(request):
-    return render(request, "auctions/index.html",{
-        "listings": Listing.objects.all()
-    })
+    if not request.user.is_authenticated:
+        if "wishlist" not in request.session:
+            request.session["watchlist"] = []
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(closed=False)
+        })
+    else:
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(closed=False)
+        })
 """
 This is a method to view all listings.
 
@@ -40,16 +47,14 @@ def active_listings(request):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        if "wishlist" not in request.session:
-            request.session["wishlist"] = []
         return render(request, "auctions/index.html", {
-            "listings": Listing.objects.all()
+            "listings": Listing.objects.filter(closed=False)
         })
 
 def active_listings(request,category):
 
     return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(categories=category)
+            "listings": Listing.objects.filter(categories=category, closed=False)
 
         })
 
@@ -156,9 +161,27 @@ def watchlist(request):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        pass
 
+        return render(request,"auctions/watchlist.html", {
+            "listings": request.session["watchlist"]
+        })
 
+def watchlist_add(request, listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        for i in request.session["watchlist"]:
+            if i == listing_id:
+                return redirect('listing', listing_id=listing_id)
+        request.session["watchlist"].append(listing_id)
+        return redirect('listing', listing_id= listing_id)
+
+def watchlist_remove(request,listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        request.session["watchlist"].remove(listing_id)
+        return redirect('active_listings')
 
 
 
