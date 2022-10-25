@@ -1,10 +1,16 @@
     <h2 style="display: inline">{{ listing.title }}</h2>
-    {% if listing.closed %}
+    {% if listing.closed and not listing.finalized %}
         <h3 style="color: red" style="display: inline">CLOSED</h3>
+    {% endif %}
+    {% if listing.finalized %}
+        <h3 style="color: red" style="display: inline">FINALIZED</h3>
+        {% if listing.final_bidder == user %}
+            <h3 style="color:green" style="display: inline">You win! for ${{ listing.bid }}</h3>
+            {% endif %}
     {% endif %}
     <span>Category: {{ listing.categories }}</span>
     <br><span>Sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</span>
-    <p>Current Bid: {{ listing.bid }}</p>
+    <p>Current Bid: ${{ listing.bid }}</p>
     <br>
     <p>{{ listing.description }}</p>
     <br>
