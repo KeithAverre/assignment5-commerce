@@ -5,7 +5,7 @@ from PIL import Image #for image field
 from django.core.files import File
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
-from datetime import date
+import datetime
 
 """
 MODEL: USER
@@ -64,7 +64,7 @@ class Listing(models.Model):
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
-    creation_date = models.DateField(default=date.today) #save on creation
+    creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
     closed = models.BooleanField(default=False)
 
 
@@ -72,6 +72,8 @@ class Listing(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+    def update_bid(self,new_bid):
+        self.bid = new_bid
     # def save(self, *args, **kwargs):
     #     super(Listing, self).save(*args, **kwargs)
     #     if self.image_url and not self.image:
@@ -104,7 +106,6 @@ class bid(models.Model):
 
     def __int__(self):
         return self.amount
-
 
 
 """

@@ -1,10 +1,10 @@
     <h2 style="display: inline">{{ listing.title }}</h2>
     {% if listing.closed %}
-
         <h3 style="color: red" style="display: inline">CLOSED</h3>
     {% endif %}
     <span>Category: {{ listing.categories }}</span>
-    <h5>Current Bid: {{ listing.bid }}</h5>
+    <br><span>Sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</span>
+    <p>Current Bid: {{ listing.bid }}</p>
     <br>
     <p>{{ listing.description }}</p>
     <br>
@@ -13,12 +13,24 @@
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Go to listing</button >
     </form>
-    {% if user.is_authenticated %}
+    <br>
+    {% if user.is_authenticated and user.username != listing.user_owner.username%}
+    <form action="{% url 'newbid' listing_id=listing.pk %}" style="display: inline" method="POST">
+        {% csrf_token %}
+        <button type="submit" style="display: inline">Bid now!</button>
+        <label for="bid"style="display: inline">Bid amount:</label>
+            <input type="number" id="bid" name="{{ listing.pk }}" min="{{ listing.bid }}" style="display: inline">
+    </form>
+    {% endif %}
+    <br>
+    {% if user.is_authenticated and not watchlist%}
     <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Add to Watchlist</button>
     </form>
     {% endif %}
-    <footer>sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</footer>
+
+
+
 
 
 

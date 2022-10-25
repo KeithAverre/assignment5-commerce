@@ -5,10 +5,11 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 
-from .models import User,Listing, bid, Comment
+from .models import User, Listing, bid, Comment
 from .forms import ListingForm
 from django.contrib import messages
 from django.http import Http404
+
 """
 TEMPLATE
 
@@ -31,6 +32,8 @@ def index(request):
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(closed=False)
         })
+
+
 """
 This is a method to view all listings.
 
@@ -42,7 +45,9 @@ TODO:
 Known bugs:
 
 """
-#this will never be accessed before being logged in
+
+
+# this will never be accessed before being logged in
 def active_listings(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -51,12 +56,13 @@ def active_listings(request):
             "listings": Listing.objects.filter(closed=False)
         })
 
-def active_listings(request,category):
 
+def active_listings(request, category):
     return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(categories=category, closed=False)
+        "listings": Listing.objects.filter(categories=category, closed=False)
 
-        })
+    })
+
 
 """
 This is a method to create a listing.
@@ -70,6 +76,7 @@ Known bugs:
 
 """
 
+
 def create_listing(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -77,18 +84,17 @@ def create_listing(request):
         if request.method == "POST":
             listing_form = ListingForm(request.POST, )
             if listing_form.is_valid():
-                #thank you kevin, you are a life saver
+                # thank you kevin, you are a life saver
                 new_listing = listing_form.save(commit=False)
                 new_listing.user_owner = request.user
                 new_listing.save()
                 messages.success(request, (f'\"{listing_form.cleaned_data["title"]}\" was successfully added!'))
-                return redirect("listing", listing_id=new_listing.pk) #should go to new listing
+                return redirect("listing", listing_id=new_listing.pk)  # should go to new listing
             else:
                 messages.error(request, 'Error saving form')
         else:
             listing_form = ListingForm()
         return render(request, "auctions/create_listing.html", {'listings_form': listing_form})
-
 
 
 """
@@ -107,6 +113,8 @@ TODO:
 Known bugs:
 
 """
+
+
 def listing(request, listing_id):
     try:
         entry = Listing.objects.get(pk=listing_id)
@@ -117,10 +125,12 @@ def listing(request, listing_id):
 
     })
 
+
 def user_listings(request):
     return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(user_owner=request.user)
-        })
+        "listings": Listing.objects.filter(user_owner=request.user)
+    })
+
 
 """
 This is the categories view.
@@ -134,16 +144,25 @@ TODO:
 Known bugs:
     
 """
+
+
 def categories(request):
     if request.method == "POST":
-        return redirect(f'active_listings/{request.POST["Category"]}') #not the prettiest solution but it works
+        return redirect(f'active_listings/{request.POST["Category"]}')  # not the prettiest solution but it works
     else:
         return render(request, "auctions/categories.html")
 
 
+def newbid(request, listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
 
-
-
+        entry = Listing.objects.get(pk=listing_id)
+        entry.update_bid(request.POST[f'{listing_id}'])
+        entry.save()
+        bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry)
+        return redirect('listing', listing_id=listing_id)
 
 
 """
@@ -157,17 +176,20 @@ TODO:
 Known bugs:
     
 """
+
+
 def watchlist(request):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        listings=[]
+        listings = []
         for i in request.session["watchlist"]:
             listings.append(Listing.objects.get(pk=i))
-        print(listings)
-        return render(request,"auctions/watchlist.html", {
-            "listings": listings
+        return render(request, "auctions/watchlist.html", {
+            "listings": listings,
+            "watchlist": "yes"
         })
+
 
 def watchlist_add(request, listing_id):
     if not request.user.is_authenticated:
@@ -179,15 +201,26 @@ def watchlist_add(request, listing_id):
         request.session["watchlist"] += [listing_id]
         return redirect('listing', listing_id=listing_id)
 
-def watchlist_remove(request,listing_id):
+
+def watchlist_remove(request, listing_id):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-        request.session["watchlist"].remove(listing_id)
-        return redirect('active_listings')
+
+        if len(request.session["watchlist"]) == 1:
+            request.session["watchlist"] = []
+        else:
+            temp = []
+            for i in request.session["watchlist"]:
+                if i != listing_id:
+                    temp.append(i)
+            request.session["watchlist"].clear()
+            for i in temp:
+                request.session["watchlist"] += [i]
+        return redirect('watchlist')
 
 
-
+# REALLY UGLY SOLUTION BUT COULDN'T GET POP OR DEL WORK
 
 
 """
@@ -199,6 +232,8 @@ TODO:
 Known bugs:
     -Registration can happen without email or password. **fixed by adding a required field to register.html
 """
+
+
 def login_view(request):
     if request.method == "POST":
 
