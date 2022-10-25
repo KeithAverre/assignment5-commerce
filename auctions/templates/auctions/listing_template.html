@@ -1,4 +1,3 @@
-<section>
     <h2 style="display: inline">{{ listing.title }}</h2>
     {% if listing.closed %}
 
@@ -15,11 +14,11 @@
         <button type="submit" style="display: inline">Go to listing</button >
     </form>
     {% if user.is_authenticated %}
-    <form action="#" style="display: inline">
+    <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Add to Watchlist</button>
     </form>
     {% endif %}
     <footer>sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</footer>
 
 
-</section>
+

@@ -161,9 +161,12 @@ def watchlist(request):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-
+        listings=[]
+        for i in request.session["watchlist"]:
+            listings.append(Listing.objects.get(pk=i))
+        print(listings)
         return render(request,"auctions/watchlist.html", {
-            "listings": request.session["watchlist"]
+            "listings": listings
         })
 
 def watchlist_add(request, listing_id):
@@ -173,8 +176,8 @@ def watchlist_add(request, listing_id):
         for i in request.session["watchlist"]:
             if i == listing_id:
                 return redirect('listing', listing_id=listing_id)
-        request.session["watchlist"].append(listing_id)
-        return redirect('listing', listing_id= listing_id)
+        request.session["watchlist"] += [listing_id]
+        return redirect('listing', listing_id=listing_id)
 
 def watchlist_remove(request,listing_id):
     if not request.user.is_authenticated:
