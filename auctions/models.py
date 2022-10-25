@@ -59,8 +59,8 @@ class Listing(models.Model):
     )
 
 
-    # image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100)
-    image_url = models.URLField()
+    image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100,required=False)
+    image_url = models.URLField(required=False)
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
@@ -86,14 +86,14 @@ class Listing(models.Model):
         self.finalized = True
         self.closed = True
         self.final_bidder = winner
-    # def save(self, *args, **kwargs):
-    #     super(Listing, self).save(*args, **kwargs)
-    #     if self.image_url and not self.image:
-    #         img_temp = NamedTemporaryFile(delete=True)
-    #         img_temp.write(urlopen(self.image_url).read())
-    #         img_temp.flush()
-    #         self.image.save(f"image_{self.pk}", File(img_temp))
-    #         super(Listing, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
+        super(Listing, self).save(*args, **kwargs)
+        if self.image_url and not self.image:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(self.image_url).read())
+            img_temp.flush()
+            self.image.save(f"image_{self.pk}", File(img_temp))
+            super(Listing, self).save(*args, **kwargs)
 
 
 
