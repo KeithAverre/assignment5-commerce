@@ -59,7 +59,7 @@ class Listing(models.Model):
     )
 
 
-    image = models.ImageField(upload_to='media/Listings/ ', blank=True,max_length=100,required=False)
+    image = models.ImageField(upload_to='auctions/media/Listings/ ', blank=True,max_length=100,required=False)
     image_url = models.URLField(required=False)
 
 
