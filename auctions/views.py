@@ -107,11 +107,14 @@ def newbid(request, listing_id):
     if not request.user.is_authenticated:
         return redirect('login')
     else:
-
+        #wow that listing_id trick was from a fever dream, both the listing_id and storing the reference
+        #       of how much the new bid is from listing_template
+        new = bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'],
+                           listing=Listing.objects.get(pk=listing_id)).save()
         entry = Listing.objects.get(pk=listing_id)
-        entry.update_bid(request.POST[f'{listing_id}'])
+        entry.update_bid(new.amount)
         entry.save()
-        bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry).save()
+
         return redirect('listing', listing_id=listing_id)
 
 """
