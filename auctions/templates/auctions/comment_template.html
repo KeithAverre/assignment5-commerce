@@ -1,0 +1,8 @@
+    {% if user.is_authenticated and not listing.closed%}
+    <form action="{% url 'comment' listing_id=listing.pk %}" style="display: inline" method="POST">
+    {% csrf_token %}
+        <input type="text" id="comment_text" name="comment_text">
+        <button type="submit" style="display: inline">Post a comment!</button>
+
+    </form>
+    {% endif %}

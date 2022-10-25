@@ -4,6 +4,17 @@
 <h2>Current Listing</h2>
 
 <article>
-    <section>{% include "auctions/listing_template.html" %}</section>
+    <section>
+        {% include "auctions/listing_template.html" %}
+
+                <section>
+                    {% for comment in Comments %}
+                    <p>{{ comment.commenter }} says: {{ comment.comment }}</p>
+                    {% endfor %}
+                </section>
+
+        {% include "auctions/comment_template.html" %}
+    </section>
+
 </article>
 {% endblock %}

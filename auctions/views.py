@@ -97,6 +97,7 @@ def create_listing(request):
         return render(request, "auctions/create_listing.html", {'listings_form': listing_form})
 
 
+
 """
 This is a view to allow viewing of a particular listing
 
@@ -120,8 +121,10 @@ def listing(request, listing_id):
         entry = Listing.objects.get(pk=listing_id)
     except Listing.DoesNotExist:
         raise Http404("Listing not found")
+    comments = Comment.objects.filter(listing=entry)
     return render(request, "auctions/listing.html", {
         "listing": entry,
+        "Comments":comments
 
     })
 
@@ -161,7 +164,7 @@ def newbid(request, listing_id):
         entry = Listing.objects.get(pk=listing_id)
         entry.update_bid(request.POST[f'{listing_id}'])
         entry.save()
-        bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry)
+        bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry).save()
         return redirect('listing', listing_id=listing_id)
 
 def close(request, listing_id):
@@ -228,7 +231,7 @@ def watchlist_remove(request, listing_id):
         return redirect('login')
     else:
 
-        if len(request.session["watchlist"]) == 1:
+        if len(request.session["watchlist"]) <= 1:
             request.session["watchlist"] = []
         else:
             temp = []
@@ -239,10 +242,18 @@ def watchlist_remove(request, listing_id):
             for i in temp:
                 request.session["watchlist"] += [i]
         return redirect('watchlist')
-
-
 # REALLY UGLY SOLUTION BUT COULDN'T GET POP OR DEL WORK
 
+
+
+def comment(request,listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        Comment.objects.create(commenter=request.user, comment=request.POST["comment_text"],
+                               listing=Listing.objects.get(pk=listing_id))
+
+        return redirect('listing', listing_id=listing_id)
 
 """
 This is the login section of the views.
