@@ -74,6 +74,11 @@ class Listing(models.Model):
 
     def update_bid(self,new_bid):
         self.bid = new_bid
+
+    def close_listing(self):
+        self.closed = True
+    def open_listing(self):
+        self.closed = False
     # def save(self, *args, **kwargs):
     #     super(Listing, self).save(*args, **kwargs)
     #     if self.image_url and not self.image:

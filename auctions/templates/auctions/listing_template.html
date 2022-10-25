@@ -22,10 +22,27 @@
             <input type="number" id="bid" name="{{ listing.pk }}" min="{{ listing.bid }}" style="display: inline">
     </form>
     {% endif %}
+    {% if user.is_authenticated and user.username == listing.user_owner.username and not listing.closed%}
+    <form action="{% url 'close' listing_id=listing.pk %}" style="display: inline" method="POST">
+        {% csrf_token %}
+        <button type="submit" style="display: inline">Close Listing</button>
+    </form>
+    {% endif %}
+    {% if user.is_authenticated and user.username == listing.user_owner.username and listing.closed%}
+    <form action="{% url 'open' listing_id=listing.pk %}" style="display: inline" method="POST">
+        {% csrf_token %}
+        <button type="submit" style="display: inline">Open Listing</button>
+    </form>
+    {% endif %}
     <br>
-    {% if user.is_authenticated and not watchlist%}
+    {% if user.is_authenticated and not watchlist %}
     <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Add to Watchlist</button>
+    </form>
+    {% endif %}
+    {% if user.is_authenticated and watchlist %}
+    <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
+        <button type="submit" style="display: inline">Remove from watchlist</button>
     </form>
     {% endif %}
 

@@ -5,11 +5,7 @@
 
 <article>
     {% for listing in listings %}
-        <section>{% include "auctions/listing_template.html" %}
-            <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
-                <button type="submit" style="display: inline">Remove from watchlist</button>
-            </form>
-        </section>
+        <section>{% include "auctions/listing_template.html" %}</section>
     {% endfor %}
 </article>
 {% endblock %}

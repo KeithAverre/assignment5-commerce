@@ -164,7 +164,28 @@ def newbid(request, listing_id):
         bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'], listing=entry)
         return redirect('listing', listing_id=listing_id)
 
-
+def close(request, listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        entry = Listing.objects.get(pk=listing_id)
+        if request.user != entry.user_owner:
+            return redirect('index') #no idea how'd you get here but just in case
+        else:
+            entry.close_listing()
+            entry.save()
+            return redirect('listing', listing_id=listing_id)
+def open(request, listing_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        entry = Listing.objects.get(pk=listing_id)
+        if request.user != entry.user_owner:
+            return redirect('index') #no idea how'd you get here but just in case
+        else:
+            entry.open_listing()
+            entry.save()
+            return redirect('listing', listing_id=listing_id)
 """
 This is the watchlist of the current user
 
