@@ -236,6 +236,7 @@ def watchlist(request):
             listings.append(Listing.objects.get(pk=i))
         return render(request, "auctions/watchlist.html", {
             "listings": listings,
+            "amount" :len(request.session["watchlist"]),
             "watchlist": "yes"
         })
 
