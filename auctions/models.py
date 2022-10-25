@@ -137,6 +137,8 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_owner")
     comment = models.TextField()
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_parent_listing")
+
+    #not used due to time constraint and lack of time management!
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,
                                         related_name='child_comment', null=True, blank=True)
 

@@ -254,7 +254,18 @@ def comment(request,listing_id):
                                listing=Listing.objects.get(pk=listing_id))
 
         return redirect('listing', listing_id=listing_id)
+def del_comment(request, comment_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    else:
+        if(request.user == Comment.objects.get(pk=comment_id).commenter or request.user == Comment.objects.get(pk=comment_id).listing.user_owner):
 
+            old_comment = Comment.objects.get(pk=comment_id)
+            listing_id= old_comment.listing.pk
+            old_comment.delete()
+            return redirect('listing', listing_id=listing_id)
+        else:
+            return redirect('index')  # no idea how'd you get here but just in case
 """
 This is the login section of the views.
 
