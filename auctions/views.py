@@ -22,11 +22,13 @@ Known bugs:
 
 
 def index(request):
-    if not request.user.is_authenticated:
-        if "wishlist" not in request.session:
+    if request.user.is_authenticated:
+        if "watchlist" not in request.session:
             request.session["watchlist"] = []
+
         return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(closed=False)
+            "listings": Listing.objects.filter(closed=False),
+            "watching": request.session["watchlist"],
         })
     else:
         return render(request, "auctions/index.html", {
@@ -36,7 +38,8 @@ def index(request):
 
 def active_listings(request, category):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.filter(categories=category, closed=False)
+        "listings": Listing.objects.filter(categories=category, closed=False),
+        "watching": request.session["watchlist"],
 
     })
 
@@ -78,8 +81,8 @@ def listing(request, listing_id):
     comments = Comment.objects.filter(listing=entry)
     return render(request, "auctions/listing.html", {
         "listing": entry,
-        "Comments":comments
-
+        "Comments":comments,
+        "watching": request.session["watchlist"],
     })
 
 """
@@ -87,7 +90,9 @@ All listings by the particular user
 """
 def user_listings(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.filter(user_owner=request.user)
+        "listings": Listing.objects.filter(user_owner=request.user),
+        "watching": request.session["watchlist"],
+
     })
 
 
@@ -159,7 +164,8 @@ Wins for the current user
 """
 def my_wins(request):
     return render(request, "auctions/index.html", {
-        "listings": Listing.objects.filter(final_bidder=request.user)
+        "listings": Listing.objects.filter(final_bidder=request.user),
+        "watching": request.session["watchlist"],
     })
 
 
@@ -172,12 +178,13 @@ def watchlist(request):
         return redirect('login')
     else:
         listings = []
+        print(request.session["watchlist"])
         for i in request.session["watchlist"]:
             listings.append(Listing.objects.get(pk=i))
         return render(request, "auctions/watchlist.html", {
             "listings": listings,
             "amount" :len(request.session["watchlist"]),
-            "watchlist": "yes"
+            "watching": request.session["watchlist"],
         })
 
 

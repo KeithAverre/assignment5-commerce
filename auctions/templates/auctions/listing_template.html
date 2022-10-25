@@ -45,17 +45,26 @@
     </form>
     {% endif %}
     <br>
-    {% if user.is_authenticated and not watchlist %}
-    <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
-        <button type="submit" style="display: inline">Add to Watchlist</button>
-    </form>
+
+
+    {% if user.is_authenticated %}
+        <!--Very neat trick found at https://stackoverflow.com/questions/7481750/check-for-presence-in-a-list-django-template-->
+        {% if listing.pk in watching %}
+            <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
+                <button type="submit" style="display: inline">Remove from watchlist</button>
+            </form>
+
+            {% else %}
+            <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
+                <button type="submit" style="display: inline">Add to Watchlist</button>
+            </form>
+            {% endif %}
+
     {% endif %}
-    <!--Does not current work due to structure of file-->
-    {% if user.is_authenticated and watchlist %}
-    <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
-        <button type="submit" style="display: inline">Remove from watchlist</button>
-    </form>
-    {% endif %}
+
+
+
+
 
 
 
