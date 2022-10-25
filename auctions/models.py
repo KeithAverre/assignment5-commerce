@@ -59,7 +59,7 @@ class Listing(models.Model):
     )
 
 
-    image = models.ImageField(upload_to='images/Listings/ ', blank=True,max_length=100,required=False)
+    image = models.ImageField(upload_to='media/Listings/ ', blank=True,max_length=100,required=False)
     image_url = models.URLField(required=False)
 
 
@@ -115,7 +115,7 @@ class bid(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bid_owner")
     amount = models.IntegerField()
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="parent_listing")
-
+    creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     def __int__(self):
         return self.amount
 
@@ -144,7 +144,7 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_owner")
     comment = models.TextField()
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_parent_listing")
-
+    creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     #not used due to time constraint and lack of time management!
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,
                                         related_name='child_comment', null=True, blank=True)
