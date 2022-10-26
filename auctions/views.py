@@ -110,9 +110,11 @@ def newbid(request, listing_id):
         #wow that listing_id trick was from a fever dream, both the listing_id and storing the reference
         #       of how much the new bid is from listing_template
         new = bid.objects.create(bidder=request.user, amount=request.POST[f'{listing_id}'],
-                           listing=Listing.objects.get(pk=listing_id)).save()
+                           listing=Listing.objects.get(pk=listing_id))
+        new.save()
+
         entry = Listing.objects.get(pk=listing_id)
-        entry.update_bid(new.amount)
+        entry.update_bid(new.amount,new.bidder)
         entry.save()
 
         return redirect('listing', listing_id=listing_id)

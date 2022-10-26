@@ -10,7 +10,7 @@
     {% endif %}
     <span>Category: {{ listing.categories }}</span>
     <br><span>Sold by: {{ listing.user_owner }} at {{ listing.creation_date }}</span>
-    <p>Current Bid: ${{ listing.bid }}</p>
+<p>Current Bid: ${{ listing.bid }}, {% if listing.final_bidder %}<strong>{{ listing.final_bidder.username }} is leading</strong> {% endif %}</p>
     <br>
     <p>{{ listing.description }}</p>
     <br>
@@ -21,6 +21,9 @@
     <a href = {{ listing.image_url }}>
         <img src="{{ listing.image_url }}" width= 500px height= 500px alt="Picture of: {{ listing.title }}">
     </a>
+    {% endif %}
+    {% if not listing.image and not listing.image_url %}
+        <h6>No image included</h6>
     {% endif %}
     <br>
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
