@@ -8,4 +8,4 @@ class ListingForm(forms.ModelForm):
     class Meta:
         model = Listing
         #fields = ('categories', 'image', 'image_url', 'title', 'description', 'bid')
-        fields = ('title', 'description', 'bid', 'categories', 'image_url')
+        fields = ('title', 'description', 'bid', 'categories', 'image','image_url')

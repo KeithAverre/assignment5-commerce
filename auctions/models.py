@@ -59,8 +59,8 @@ class Listing(models.Model):
     )
 
 
-    image = models.ImageField(upload_to='auctions/media/Listings/ ', blank=True,max_length=100,required=False)
-    image_url = models.URLField(required=False)
+    image = models.ImageField(upload_to='images', blank=True,max_length=100)
+    image_url = models.URLField()
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
