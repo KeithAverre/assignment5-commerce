@@ -199,9 +199,9 @@ def watchlist_add(request, listing_id):
     else:
         for i in request.session["watchlist"]:
             if i == listing_id:
-                return redirect('listing', listing_id=listing_id)
+                return redirect('watchlist')
         request.session["watchlist"] += [listing_id]
-        return redirect('listing', listing_id=listing_id)
+        return redirect('watchlist')
 
 
 def watchlist_remove(request, listing_id):
