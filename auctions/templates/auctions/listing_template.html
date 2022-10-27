@@ -22,9 +22,7 @@
         <img src="{{ listing.image_url }}" width= 500px height= 500px alt="Picture of: {{ listing.title }}">
     </a>
     {% endif %}
-    {% if not listing.image and not listing.image_url %}
-        <h6>No image included</h6>
-    {% endif %}
+
     <br>
     <form action="{% url 'listing' listing.pk %}" style="display: inline">
         <button type="submit" style="display: inline">Go to listing</button >

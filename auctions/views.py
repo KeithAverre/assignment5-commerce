@@ -54,12 +54,14 @@ def create_listing(request):
         return redirect('login')
     else:
         if request.method == "POST":
-            listing_form = ListingForm(request.POST, )
+            listing_form = ListingForm(request.POST,request.FILES)
             if listing_form.is_valid():
                 # thank you kevin, you are a life saver
                 new_listing = listing_form.save(commit=False)
                 new_listing.user_owner = request.user
                 new_listing.save()
+                print(new_listing.image)
+                print("SADASSD")
                 messages.success(request, (f'\"{listing_form.cleaned_data["title"]}\" was successfully added!'))
                 return redirect("listing", listing_id=new_listing.pk)  # should go to new listing
             else:

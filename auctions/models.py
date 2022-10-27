@@ -7,6 +7,7 @@ from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
 import datetime
 
+
 """
 MODEL: USER
 
@@ -26,7 +27,7 @@ class User(AbstractUser):
 MODEL: listing
 
 TODO:
-    -add fields:
+    -add fields:ew
         -title -charfield **
         -image -img field **
         -Description -textfield **
@@ -59,15 +60,15 @@ class Listing(models.Model):
     )
 
 
-    image = models.ImageField(upload_to='images', blank=True,max_length=100)
-    image_url = models.URLField( blank=True)
+    image = models.ImageField(upload_to='images/',max_length=100,blank=True, null=True)
+    image_url = models.URLField(blank=True)
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
     creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
     closed = models.BooleanField(default=False)
     finalized = models.BooleanField(default=False)
-    final_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder_won", null=True)
+    final_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder_won", null=True, blank=True)
 
 
 
