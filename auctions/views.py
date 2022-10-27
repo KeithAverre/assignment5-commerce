@@ -80,12 +80,19 @@ def listing(request, listing_id):
         entry = Listing.objects.get(pk=listing_id)
     except Listing.DoesNotExist:
         raise Http404("Listing not found")
-    comments = Comment.objects.filter(listing=entry)
-    return render(request, "auctions/listing.html", {
-        "listing": entry,
-        "Comments":comments,
-        "watching": request.session["watchlist"],
-    })
+    if not request.user.is_authenticated:
+        comments = Comment.objects.filter(listing=entry)
+        return render(request, "auctions/listing.html", {
+            "listing": entry,
+            "Comments": comments,
+        })
+    else:
+        comments = Comment.objects.filter(listing=entry)
+        return render(request, "auctions/listing.html", {
+            "listing": entry,
+            "Comments":comments,
+            "watching": request.session["watchlist"],
+        })
 
 """
 All listings by the particular user
