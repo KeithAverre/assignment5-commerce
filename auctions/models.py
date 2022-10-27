@@ -20,6 +20,35 @@ Known bugs:
 
 """
 class User(AbstractUser):
+    watchlist = models.CharField(max_length=1000, default="")#not a future proof solution
+
+    def watch(self):
+        if self.watchlist.count(",") == 0 or self.watchlist =="" or self.watchlist ==",":
+            return []
+        elif self.watchlist.count(",") == 1:
+            f = self.watchlist.index(",")
+            return [self.watchlist[0:f]]
+        k = []
+        for i in list(self.watchlist.split(",")):
+            if i != "":
+                k.append(int(i))
+        return k
+    def add_to_watchlist(self,s):
+        if len(self.watchlist) == 0:
+            self.watchlist += f'{s},'
+        else:
+            self.watchlist += f'{s},'
+
+    def remove_from_watchlist(self,s):
+
+        if(self.watchlist[0:s] == str(s)):
+            self.watchlist=self.watchlist[s:]
+
+        self.watchlist= self.watchlist.replace(f',{s},',",")
+
+
+    def clear_watchlist(self):
+        self.watchlist =""
     pass
 
 

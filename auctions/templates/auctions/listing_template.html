@@ -61,7 +61,6 @@
             <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
                 <button type="submit" style="display: inline">Remove from watchlist</button>
             </form>
-
             {% else %}
             <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
                 <button type="submit" style="display: inline">Add to Watchlist</button>
