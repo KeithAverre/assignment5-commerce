@@ -5,8 +5,8 @@ from PIL import Image #for image field
 from django.core.files import File
 from urllib.request import urlopen
 from tempfile import NamedTemporaryFile
-import datetime
 
+from django.utils import timezone
 
 """
 MODEL: USER
@@ -94,7 +94,7 @@ class Listing(models.Model):
 
 
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
-    creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
+    #creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
     closed = models.BooleanField(default=False)
     finalized = models.BooleanField(default=False)
     final_bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bidder_won", null=True, blank=True)
@@ -146,7 +146,7 @@ class bid(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bid_owner")
     amount = models.IntegerField()
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="parent_listing")
-    creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
+    #creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     def __int__(self):
         return self.amount
 
@@ -175,7 +175,7 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_owner")
     comment = models.TextField()
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_parent_listing")
-    creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
+    #creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     #not used due to time constraint and lack of time management!
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,
                                         related_name='child_comment', null=True, blank=True)

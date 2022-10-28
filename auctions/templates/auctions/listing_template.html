@@ -9,7 +9,7 @@
             {% endif %}
     {% endif %}
     <span>Category: {{ listing.categories }}</span>
-    <br><span>Listed by: {{ listing.user_owner }} at {{ listing.creation_date }}</span>
+    <br><span>Listed by: {{ listing.user_owner }}</span>
 <p>Current Bid: ${{ listing.bid }}, {% if listing.final_bidder %}<strong>{{ listing.final_bidder.username }} is leading</strong> {% endif %}</p>
     <br>
     <p>{{ listing.description }}</p>
