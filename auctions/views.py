@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
 from .models import User, Listing, bid, Comment
@@ -21,7 +21,7 @@ Known bugs:
 """
 
 
-def index(request):
+def index0(request):
     if request.user.is_authenticated:
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(closed=False),
@@ -31,6 +31,11 @@ def index(request):
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(closed=False)
         })
+
+def index(request):
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.filter(closed=False)
+    })
 
 
 def active_listings(request, category):
@@ -70,7 +75,7 @@ def create_listing(request):
 """
 This is a view to allow viewing of a particular listing
 """
-def listing(request, listing_id):
+def listing0(request, listing_id):
     try:
         entry = Listing.objects.get(pk=listing_id)
     except Listing.DoesNotExist:
@@ -89,6 +94,12 @@ def listing(request, listing_id):
             "watching": request.user.watch(),
         })
 
+def listing(request, listing_id):
+    entry = get_object_or_404(Listing, pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": entry 
+    })
+
 """
 All listings by the particular user
 """
@@ -100,9 +111,18 @@ def user_listings(request):
     })
 
 
-def categories(request):
+def categories0(request):
     if request.method == "POST":
         return redirect(f'active_listings/{request.POST["Category"]}')  # not the prettiest solution but it works
+    else:
+        return render(request, "auctions/categories.html")
+
+def categories(request):
+    if request.method == "POST":
+        c = request.POST["Category"]
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(categories=c, closed=False)
+        })
     else:
         return render(request, "auctions/categories.html")
 
@@ -316,3 +336,16 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+from django.http import JsonResponse
+def api_add_comment(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    comment=request.POST["comment_text"]
+    if request.method == "POST":
+        c = Comment.objects.create(commenter=request.user, comment=comment, listing=listing)
+        return JsonResponse({
+                'comment': c.comment,
+                'commenter': f'{c.commenter}',
+                'created_at': c.last_updated
+            })
+    return JsonResponse({'error':'something went wrong'})

@@ -25,6 +25,8 @@ urlpatterns = [
     path("commment/<int:listing_id>", views.comment, name="comment"),
     path("del_comment/<int:comment_id>", views.del_comment, name="del_comment"),
     path("finalize_listing/<int:listing_id>", views.finalize_listing, name="finalize_listing"),
-    path("my_wins", views.my_wins, name="my_wins")
+    path("my_wins", views.my_wins, name="my_wins"),
+
+    path("api/add_comment/<int:listing_id>", views.api_add_comment, name="api-add-comment"),
 
 ]

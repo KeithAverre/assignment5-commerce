@@ -71,28 +71,28 @@ class Listing(models.Model):
     description = models.TextField()
     bid = models.IntegerField()
 
-    HOME = 'HM'
-    CLOTHES = 'CL'
-    FURNITURE = 'FR'
-    NONE = 'NA'
-    CATEGORY = [
-        (NONE, 'None'),
-        (HOME, 'Home'),
-        (CLOTHES, 'Clothes'),
-        (FURNITURE, 'Furniture'),
+    # HOME = 'HM'
+    # CLOTHES = 'CL'
+    # FURNITURE = 'FR'
+    # NONE = 'NA'
+    # CATEGORY = [
+    #     (NONE, 'None'),
+    #     (HOME, 'Home'),
+    #     (CLOTHES, 'Clothes'),
+    #     (FURNITURE, 'Furniture'),
 
-    ]
-    categories = models.CharField(
-        max_length=2,
-        choices=CATEGORY,
-        default=NONE
-    )
+    # ]
+    # categories = models.CharField(
+    #     max_length=2,
+    #     choices=CATEGORY,
+    #     default=NONE
+    # )
 
 
     image = models.ImageField(upload_to='images/',max_length=100,blank=True, null=True)
     image_url = models.URLField(blank=True)
 
-
+    categories = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
     user_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner")
     #creation_date = models.DateField(default=datetime.datetime.now()) #save on creation
     closed = models.BooleanField(default=False)
@@ -174,7 +174,9 @@ TODO:
 class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_owner")
     comment = models.TextField()
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_parent_listing")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
+    last_updated = models.DateTimeField(auto_now=True)
+
     #creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     #not used due to time constraint and lack of time management!
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,
@@ -182,3 +184,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return  f'{self.comment}'
+
+
+class Category(models.Model):
+    code = models.CharField(max_length=2, primary_key=True)
+    name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to='images/categories', blank=True)
+
+    class Meta:
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
