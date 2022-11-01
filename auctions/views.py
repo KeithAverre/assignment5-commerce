@@ -117,14 +117,16 @@ def categories0(request):
     else:
         return render(request, "auctions/categories.html")
 
+from .forms import CategoryForm
 def categories(request):
     if request.method == "POST":
-        c = request.POST["Category"]
+        c = request.POST["category"]
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(categories=c, closed=False)
         })
     else:
-        return render(request, "auctions/categories.html")
+        return render(request, "auctions/categories.html", {'form': CategoryForm()})
+
 
 
 def newbid(request, listing_id):

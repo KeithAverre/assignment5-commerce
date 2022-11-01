@@ -4,13 +4,14 @@
 <h2>Choose a categories to search</h2>
     <form action="{% url 'categories' %}" method="post">
         {% csrf_token %}
-        <label for="Category">Category</label>
+        {{ form }}
+        <!-- <label for="Category">Category</label>
         <select name="Category" id="Categories">
             <option value="NA">None</option>
             <option value="FR">Furniture</option>
             <option value="HM">Home</option>
             <option value="CL">Clothes</option>
-        </select>
+        </select> -->
         <button type="submit">Select Category</button>
     </form>
 {% endblock %}
