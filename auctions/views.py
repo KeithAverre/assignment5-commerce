@@ -208,6 +208,25 @@ def watchlist_remove(request, listing_id):
             request.user.save()
         return redirect('watchlist')
 
+from django.http import JsonResponse
+def api_watchlist_toggle(request,listing_id):
+    if request.user.is_authenticated:
+
+        if listing_id in request.user.watch():
+            request.user.remove_from_watchlist(listing_id)
+            request.user.save()
+            isInWatchlist = False
+        else:
+            request.user.add_to_watchlist(listing_id)
+            request.user.save()
+            isInWatchlist = True
+        return JsonResponse({
+            "inWatchlist": isInWatchlist
+        })
+    else:
+        return JsonResponse({
+            "inWatchlist": False
+        })
 
 """
 Comment views for listings
