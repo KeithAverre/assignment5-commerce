@@ -165,7 +165,6 @@ Wins for the current user
 def my_wins(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(final_bidder=request.user),
-        "watching": request.user.watch(),
     })
 
 
