@@ -6,10 +6,11 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import User, Listing, bid, Comment
-from .forms import ListingForm
+from .forms import ListingForm, CategoryForm
 from django.contrib import messages
 from django.http import Http404
 
+from django.shortcuts import get_object_or_404
 """
 TEMPLATE
 
@@ -21,7 +22,7 @@ Known bugs:
 """
 
 
-def index(request):
+def index0(request):
     if request.user.is_authenticated:
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(closed=False),
@@ -31,6 +32,12 @@ def index(request):
         return render(request, "auctions/index.html", {
             "listings": Listing.objects.filter(closed=False)
         })
+
+
+def index(request):
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.filter(closed=False)
+    })
 
 
 def active_listings(request, category):
@@ -70,7 +77,7 @@ def create_listing(request):
 """
 This is a view to allow viewing of a particular listing
 """
-def listing(request, listing_id):
+def listing0(request, listing_id):
     try:
         entry = Listing.objects.get(pk=listing_id)
     except Listing.DoesNotExist:
@@ -88,6 +95,14 @@ def listing(request, listing_id):
             "Comments":comments,
             "watching": request.user.watch(),
         })
+        
+def listing(request, listing_id):
+    entry = get_object_or_404(Listing, pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "listing": entry,
+    })
+
+
 
 """
 All listings by the particular user
@@ -102,9 +117,14 @@ def user_listings(request):
 
 def categories(request):
     if request.method == "POST":
-        return redirect(f'active_listings/{request.POST["Category"]}')  # not the prettiest solution but it works
+        c = request.POST["ategory"]
+        return render(request, "auctions/index.html", {
+            "listings": Listing.objects.filter(categories=c, closed=False)
+        })
+
+        #return redirect(f'active_listings/{request.POST["Category"]}')  # not the prettiest solution but it works
     else:
-        return render(request, "auctions/categories.html")
+        return render(request, "auctions/categories.html", {"form": CategoryForm()})
 
 
 def newbid(request, listing_id):
@@ -248,6 +268,19 @@ def comment(request,listing_id):
                                listing=Listing.objects.get(pk=listing_id))
 
         return redirect('listing', listing_id=listing_id)
+
+from django.http import JsonResponse
+def api_add_comment(request,listing_id):
+    c = Comment.objects.create(commenter=request.user, comment=request.POST["comment_text"],
+                               listing=Listing.objects.get(pk=listing_id))
+    print(f'api_add_comment called. comment = {c.comment}')
+    return JsonResponse({
+            'comment': c.comment,
+            'commenter': f'{c.commenter}',
+            'created_at': c.created_at
+            })
+
+
 def del_comment(request, comment_id):
     if not request.user.is_authenticated:
         return redirect('login')

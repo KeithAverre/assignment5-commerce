@@ -1,8 +1,57 @@
-    {% if user.is_authenticated and not listing.closed%}
-    <form action="{% url 'comment' listing_id=listing.pk %}" style="display: inline" method="POST">
+ 
+ 
+<script>
+    document.addEventListener('DOMContentLoaded', ()=> {
+    
+        document.querySelector('#comment-form').onsubmit = ()=> {
+            form = document.querySelector('#comment-form');
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                addComment(data)
+            })
+            document.querySelector("#comment_text").value = '';
+            return false;
+        }
+    })
+
+    function addComment(data) {
+        const p = document.createElement('p');
+        p.style.display = "inline";
+        p.innerHTML = `@${data["created_at"]} ${data["commenter"]} says: ${data["comment"]}`;
+        const br = document.createElement('br');
+        document.querySelector('#comments-section').append(p);
+        document.querySelector('#comments-section').append(br);
+
+    }
+
+    </script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', ()=> {
+        document.querySelector('#xxx').onclick = ()=> {
+            fetch('/api_toggle_watch/LISTID')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                update_icon();
+            })
+ 
+        }
+    }
+</script>
+ <img id="xxx" src="xxxx">
+
+ {% if user.is_authenticated and not listing.closed%}
+    <form id="comment-form" action="{% url 'api-add-comment' listing_id=listing.pk %}" style="display: inline" method="POST">
     {% csrf_token %}
         <input type="text" id="comment_text" name="comment_text">
-        <button type="submit" style="display: inline">Post a comment!</button>
-
+        <input type="submit" style="display: inline">Post a comment!</input>
     </form>
     {% endif %}

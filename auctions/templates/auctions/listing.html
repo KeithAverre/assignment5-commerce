@@ -7,8 +7,8 @@
     <section>
         {% include "auctions/listing_template.html" %}
 
-                <section>
-                    {% for comment in Comments %}
+                <section id="comments-section">
+                    {% for comment in listing.comments.all %}
                     <p style="display: inline">{{ comment.commenter }} says: {{ comment.comment }}</p>
                         {% if user.username == listing.user_owner.username or user.username == comment.commenter.username %}
                             <form action="{% url 'del_comment' comment_id=comment.pk %}" style="display: inline" method="POST" style="display: inline">

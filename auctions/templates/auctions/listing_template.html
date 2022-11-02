@@ -57,7 +57,7 @@
 
     {% if user.is_authenticated %}
         <!--Very neat trick found at https://stackoverflow.com/questions/7481750/check-for-presence-in-a-list-django-template-->
-        {% if listing.pk in watching %}
+        {% if listing.pk in user.watch %}
             <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
                 <button type="submit" style="display: inline">Remove from watchlist</button>
             </form>

@@ -66,29 +66,43 @@ TODO:
         -Comments 
         -Time of post datetime field**
 """
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+    code = models.CharField(max_length = 2, primary_key=True)
+    
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Categories"
+
+
 class Listing(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
     bid = models.IntegerField()
 
-    HOME = 'HM'
-    CLOTHES = 'CL'
-    FURNITURE = 'FR'
-    NONE = 'NA'
-    CATEGORY = [
-        (NONE, 'None'),
-        (HOME, 'Home'),
-        (CLOTHES, 'Clothes'),
-        (FURNITURE, 'Furniture'),
+    # HOME = 'HM'
+    # CLOTHES = 'CL'
+    # FURNITURE = 'FR'
+    # NONE = 'NA'
+    # BIKES = 'BK'
+    # CATEGORY = [
+    #     (NONE, 'None'),
+    #     (HOME, 'Home'),
+    #     (CLOTHES, 'Clothes'),
+    #     (FURNITURE, 'Furniture'),
+    #     (BIKES, "Bikes")
+    # ]
+    # categories = models.CharField(
+    #         max_length=2,
+    #         choices=CATEGORY,
+    #         default=NONE
+    #     )
 
-    ]
-    categories = models.CharField(
-        max_length=2,
-        choices=CATEGORY,
-        default=NONE
-    )
-
-
+    categories = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     image = models.ImageField(upload_to='images/',max_length=100,blank=True, null=True)
     image_url = models.URLField(blank=True)
 
@@ -172,9 +186,11 @@ TODO:
 
 """
 class Comment(models.Model):
-    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comment_owner")
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
     comment = models.TextField()
-    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comment_parent_listing")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="comments")
+    created_at = models.DateTimeField(auto_now = True)
+
     #creation_date = models.DateField(default=datetime.datetime.now())  # save on creation
     #not used due to time constraint and lack of time management!
     parent_comment = models.ForeignKey('self', on_delete=models.CASCADE,
