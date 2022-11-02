@@ -22,22 +22,16 @@ Known bugs:
 
 
 def index(request):
-    if request.user.is_authenticated:
-        return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(closed=False),
-            "watching": request.user.watch(),
-        })
-    else:
-        return render(request, "auctions/index.html", {
-            "listings": Listing.objects.filter(closed=False)
-        })
+
+    return render(request, "auctions/index.html", {
+        "listings": Listing.objects.filter(closed=False)
+    })
 
 
 def active_listings(request, category):
+
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(categories=category, closed=False),
-        "watching": request.user.watch(),
-
     })
 
 
@@ -86,7 +80,6 @@ def listing(request, listing_id):
         return render(request, "auctions/listing.html", {
             "listing": entry,
             "Comments":comments,
-            "watching": request.user.watch(),
         })
 
 """
@@ -95,8 +88,6 @@ All listings by the particular user
 def user_listings(request):
     return render(request, "auctions/index.html", {
         "listings": Listing.objects.filter(user_owner=request.user),
-        "watching": request.user.watch(),
-
     })
 
 
@@ -187,13 +178,11 @@ def watchlist(request):
         return redirect('login')
     else:
         listings = []
-
         for i in request.user.watch():
             listings.append(Listing.objects.get(pk=i))
         return render(request, "auctions/watchlist.html", {
             "listings": listings,
             "amount" : len(listings),
-            "watching": request.user.watch(),
         })
 
 
@@ -207,10 +196,6 @@ def watchlist_add(request, listing_id):
         else:
             request.user.add_to_watchlist(listing_id)
             request.user.save()
-        # for i in request.session["watchlist"]:
-        #     if i == listing_id:
-        #         return redirect('watchlist')
-        # request.session["watchlist"] += [listing_id]
         return redirect('watchlist')
 
 
@@ -222,19 +207,7 @@ def watchlist_remove(request, listing_id):
         if listing_id in watch:
             request.user.remove_from_watchlist(listing_id)
             request.user.save()
-
-        # if len(request.session["watchlist"]) <= 1:
-        #     request.session["watchlist"] = []
-        # else:
-        #     temp = []
-        #     for i in request.session["watchlist"]:
-        #         if i != listing_id:
-        #             temp.append(i)
-        #     request.session["watchlist"].clear()
-        #     for i in temp:
-        #         request.session["watchlist"] += [i]
         return redirect('watchlist')
-# REALLY UGLY SOLUTION BUT COULDN'T GET POP OR DEL WORK
 
 
 """
