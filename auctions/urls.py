@@ -29,5 +29,6 @@ urlpatterns = [
     path("my_wins", views.my_wins, name="my_wins"),
 
     path("api_watchlist_toggle/<int:listing_id>", views.api_watchlist_toggle, name = "api_watchlist_toggle"),
+    path("api_watchlist_count", views.api_watchlist_count, name="api_watchlist_count"),
 
 ]

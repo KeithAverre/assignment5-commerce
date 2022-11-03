@@ -226,8 +226,25 @@ from django.http import JsonResponse
 
 @csrf_exempt
 def api_watchlist_toggle(request,listing_id):
-    return JsonResponse
-
+    if request.user.is_authenticated:
+        isInWatchlist = 0
+        try:
+            Listing.objects.get(pk=listing_id)
+        except Listing.DoesNotExist:
+            raise Http404("Listing not found")
+        if listing_id in request.user.watch():
+            request.user.remove_from_watchlist(listing_id)
+            request.user.save()
+        else:
+            request.user.add_to_watchlist(listing_id)
+            request.user.save()
+            isInWatchlist = 1
+        return JsonResponse({"isInWatchlist":isInWatchlist,
+                             "watchlist_count":len(request.user.watch())})
+    return JsonResponse({"isInWatchlist":0})
+def api_watchlist_count(request):
+    return JsonResponse({
+                         "watchlist_count": len(request.user.watch())})
 
 """
 Comment views for listings well

@@ -15,8 +15,7 @@
     <p>{{ listing.description }}</p>
     <br>
     {% if listing.image %}
-
-        <div><a href="{{ listing.image.url }}" data-lightbox="image-1" data-title="{{ listing.title }}">
+        <div><a href="{{ listing.image.url }}" data-lightbox="image-1" data-title="{{ listing.title }}" >
             <img src="{{ listing.image.url }}" alt="{{ listing.title }}" width= 500px height= 500px></a></div>
     {% endif %}
     {% if not listing.image and listing.image_url %}
@@ -60,10 +59,16 @@
 
     {% if user.is_authenticated %}
         <!--Very neat trick found at https://stackoverflow.com/questions/7481750/check-for-presence-in-a-list-django-template-->
-        <span id="heart" class="material-symbols-outlined" >
+        {% if listing.pk in user.watch %}
+            <button id="favorite_button" data-id="{{ listing.pk }}"><span id="heart" class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 100, 'opsz' 100;">
                 favorite
-        </span>
-        <form action="{% url 'watchlist_toggle' listing_id=listing.pk %}" style="display: inline">
+            </span></button>
+            {% else %}
+            <button id="favorite_button" data-id="{{ listing.pk }}"><span id="heart" class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 100, 'opsz' 100;">
+                favorite
+            </span></button>
+            {% endif %}
+        <form id="watchlist_toggle" action="{% url 'watchlist_toggle' listing_id=listing.pk %}" style="display: inline">
             {% if listing.pk in user.watch %}
                 <button type="submit" style="display: inline">Remove from watchlist</button>
             {% else %}
