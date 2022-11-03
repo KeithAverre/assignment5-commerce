@@ -62,17 +62,14 @@
         <span id="heart" class="material-symbols-outlined" >
                 favorite
         </span>
-        {% if listing.pk in user.watch %}
-            <!--action="% url 'watchlist_remove' listing_id=listing.pk %"-->
-            <form id="watchlist_remove"  style="display: inline">
+        <form action="{% url 'watchlist_toggle' listing_id=listing.pk %}" style="display: inline">
+            {% if listing.pk in user.watch %}
                 <button type="submit" style="display: inline">Remove from watchlist</button>
-            </form>
             {% else %}
-            <!--action="% url 'watchlist_add' listing_id=listing.pk %"-->
-            <form id="watchlist_add"  style="display: inline">
                 <button type="submit" style="display: inline">Add to Watchlist</button>
-            </form>
             {% endif %}
+        </form>
+
     <h2 id="ident" style="visibility: hidden; display:inline">{{ listing.pk }}</h2>
     {% endif %}
 
