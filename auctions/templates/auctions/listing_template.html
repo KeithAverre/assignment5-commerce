@@ -15,7 +15,8 @@
     <p>{{ listing.description }}</p>
     <br>
     {% if listing.image %}
-        <a href="{{ listing.image.url }}"><img src="{{ listing.image.url }}" alt="{{ listing.title }}" width= 500px height= 500px> </a>
+
+        <a href="{{ listing.image.url }}" data-lightbox="{{ listing.title }}" data-title="{{ listing.title }}"><img src="{{ listing.image.url }}" alt="{{ listing.title }}" width= 500px height= 500px></a>
     {% endif %}
     {% if not listing.image and listing.image_url %}
     <a href = {{ listing.image_url }}>
@@ -62,7 +63,6 @@
                 favorite
         </span>
         {% if listing.pk in user.watch %}
-
             <!--action="% url 'watchlist_remove' listing_id=listing.pk %"-->
             <form id="watchlist_remove"  style="display: inline">
                 <button type="submit" style="display: inline">Remove from watchlist</button>

@@ -10,7 +10,9 @@
         <link rel="stylesheet" href="https://cdn.simplecss.org/simple.css">
         <link rel="stylesheet" href="{% static 'auctions/uaa490styles.css' %}" >
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-        <link rel="stylesheet" href="auctions/lightbox.css"/>
+
+     <!-- Thank you! https://stackoverflow.com/a/52435193-->
+        <link rel="stylesheet" src="auctions/lightbox.css"/>
     </head>
     <body>
         <header>
@@ -45,6 +47,7 @@
             {% block main %}
             {% endblock %}
         </main>
+        <script src="{% static 'auctions/lightbox.js' %}"></script>
          <script src="{% static 'auctions/watchlist_toggle.js' %}">
          </script>
 

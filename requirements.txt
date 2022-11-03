@@ -1,7 +1,9 @@
 asgiref==3.5.2
+bower==0.0.0
 DateTime==4.7
 Django==4.1.2
 django-extensions==3.2.1
+grunt==0.1.1
 Pillow==9.2.0
 pytz==2022.5
 sqlparse==0.4.3
