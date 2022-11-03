@@ -208,14 +208,23 @@ def watchlist_remove(request, listing_id):
             request.user.save()
         return redirect('watchlist')
 
-from django.http import JsonResponse
-def api_watchlist_toggle(request,listing_id):
-    if request.user.is_authenticated:
 
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+
+@csrf_exempt
+def api_watchlist_toggle(request,listing_id):
+    print("hi")
+    if request.user.is_authenticated:
+        try:
+            Listing.objects.get(pk=listing_id)
+        except Listing.DoesNotExist:
+            raise Http404("Listing not found")
         if listing_id in request.user.watch():
             request.user.remove_from_watchlist(listing_id)
             request.user.save()
             isInWatchlist = False
+
         else:
             request.user.add_to_watchlist(listing_id)
             request.user.save()
@@ -229,7 +238,7 @@ def api_watchlist_toggle(request,listing_id):
         })
 
 """
-Comment views for listings
+Comment views for listings well
 """
 def comment(request,listing_id):
     if not request.user.is_authenticated:

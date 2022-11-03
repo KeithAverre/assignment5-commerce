@@ -15,3 +15,15 @@ body {
 .form-control {
   width: 50%;
 }
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 100, 'opsz' 100;
+
+
+}
+.material-symbols-outlined:hover {
+  color: aqua;
+  font-size: xx-large;
+
+
+
+}

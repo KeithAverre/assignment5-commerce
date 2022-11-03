@@ -52,21 +52,28 @@
         <button type="submit" style="display: inline">Open Listing</button>
     </form>
     {% endif %}
+
     <br>
 
 
     {% if user.is_authenticated %}
         <!--Very neat trick found at https://stackoverflow.com/questions/7481750/check-for-presence-in-a-list-django-template-->
+        <span id="heart" class="material-symbols-outlined" >
+                favorite
+        </span>
         {% if listing.pk in user.watch %}
-            <form action="{% url 'watchlist_remove' listing_id=listing.pk %}" style="display: inline">
+
+            <!--action="% url 'watchlist_remove' listing_id=listing.pk %"-->
+            <form id="watchlist_remove"  style="display: inline">
                 <button type="submit" style="display: inline">Remove from watchlist</button>
             </form>
             {% else %}
-            <form action="{% url 'watchlist_add' listing_id=listing.pk %}" style="display: inline">
+            <!--action="% url 'watchlist_add' listing_id=listing.pk %"-->
+            <form id="watchlist_add"  style="display: inline">
                 <button type="submit" style="display: inline">Add to Watchlist</button>
             </form>
             {% endif %}
-
+    <h2 id="ident" style="visibility: hidden; display:inline">{{ listing.pk }}</h2>
     {% endif %}
 
 
