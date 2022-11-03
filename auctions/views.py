@@ -245,7 +245,7 @@ def api_watchlist_toggle(request,listing_id):
 def api_watchlist_count(request):
     if request.user.is_authenticated:
         return JsonResponse({
-                         "watchlist_count": len(request.user.watch())})
+            "watchlist_count": len(request.user.watch())})
     else:
         return JsonResponse({
             "watchlist_count": 0})
