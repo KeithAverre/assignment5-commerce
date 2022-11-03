@@ -243,8 +243,12 @@ def api_watchlist_toggle(request,listing_id):
                              "watchlist_count":len(request.user.watch())})
     return JsonResponse({"isInWatchlist":0})
 def api_watchlist_count(request):
-    return JsonResponse({
+    if request.user.is_authenticated:
+        return JsonResponse({
                          "watchlist_count": len(request.user.watch())})
+    else:
+        return JsonResponse({
+            "watchlist_count": 0})
 
 """
 Comment views for listings well
