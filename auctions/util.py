@@ -11,7 +11,7 @@ def printer_not_special(msg):
     print(f'message is: {msg}')
 
 say_hi_before_and_after(printer_not_special)
-
+print(printer_not_special)
 @say_hi_before_and_after
 def printer(msg):
     print(f'message is: {msg}')
